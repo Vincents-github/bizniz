@@ -1,0 +1,445 @@
+{% load static %} {% load custom_filters %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      src="https://cdn.usefathom.com/script.js"
+      data-site="ONWOZVWW"
+      defer
+    ></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CSV Display</title>
+    <style>
+      .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; /* adjust as needed */
+      }
+
+      .flex-item {
+        flex-basis: calc(33.33% - 10px); /* adjust as needed */
+        margin-bottom: 20px; /* adjust as needed */
+        display: flex;
+        flex-direction: column;
+      }
+
+      .flex-item .default-image {
+        height: 100px; /* adjust as needed */
+        background-image: linear-gradient(
+          to left,
+          #eaff96,
+          #ffffff
+        ); /* gradient from dark to light */
+      }
+
+      .flex-item .info {
+        flex: 1;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .flex-item .info div {
+        margin-bottom: 10px;
+      }
+
+      .flex-item .pay {
+        font-weight: bold;
+        font-size: larger;
+      }
+
+      @media only screen and (max-width: 768px) {
+        /* adjust as needed */
+        .flex-item {
+          flex-basis: calc(50% - 10px);
+        }
+
+        .flex-item .default-image {
+          height: 100px; /* adjust as needed */
+        }
+
+        .flex-item:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      @media only screen and (max-width: 480px) {
+        /* adjust as needed */
+        .flex-item {
+          flex-basis: 100%;
+        }
+
+        .flex-item .default-image {
+          height: 200px; /* adjust as needed */
+        }
+
+        .flex-item:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      #search-input {
+        width: 50%;
+        padding: 0.5rem;
+        text-align: center;
+      }
+
+      #template-content {
+        display: none;
+      }
+
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .portion {
+        flex: 1;
+        padding: 1rem;
+        max-width: 50%;
+      }
+      .template {
+        white-space: pre-line;
+      }
+      button.copy-btn {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background-color: #000000;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 0.5rem;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      @media screen and (max-width: 600px) {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+        thead tr {
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+        }
+        tr {
+          margin: 0 0 1rem 0;
+        }
+        td {
+          border: none;
+          border-bottom: 1px solid #ccc;
+          position: relative;
+          padding-left: 50%;
+        }
+        td:before {
+          content: attr(data-label);
+          position: absolute;
+          left: 6px;
+          width: 45%;
+          padding-right: 10px;
+          white-space: nowrap;
+        }
+      }
+      #welcome-container {
+        background-color: #000000;
+        color: #ffffff;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #welcome-container h1 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="welcome-container">
+      <h1>🌞 /bizniz.builders/ 🌝</h1>
+    </div>
+
+    <div class="container">
+      <div class="portion">
+        <h1>Step 1</h1>
+        <h2>How it works?</h2>
+        <p>Got Skills? 👷🖋️🎨🧘</p>
+        <ul>
+          <li>Copy & Paste the template to Twetch</li>
+          <li>Add your personal skills & pricing</li>
+          <li>Post your Advert for only $0.02</li>
+          <li>Wait for market feedback</li>
+          <li>Repost to update your profile at any time!</li>
+        </ul>
+        <p>Got Capital or Ideas? 💰🏗️</p>
+        <ul>
+          <li>Browse the talent market below</li>
+          <li>Find the right person for the job</li>
+          <li>Message them on Twetch to get started!</li>
+        </ul>
+      </div>
+      <div class="portion">
+        <h1>Step 2</h1>
+        <h2>Template</h2>
+        <pre class="template">
+          🌞 /bizniz.builders/ 🌝
+            ----------
+            Pay: $ / Bitcoin / ETH / € / % / etc
+            Per: Hour / Day / Project / etc
+            Skill: What skills do you have?
+            Portfolio: Do you have proof of work?
+            Available: Are you available? ✅ / ❌
+            ----------
+            Bio: Why are you the right person for the job?</pre
+        >
+        <pre id="template-content">
+🌞 /bizniz.builders/ 🌝
+----------
+Pay: 
+Per: 
+Skill: 
+Portfolio: 
+Available: 
+----------
+Bio: </pre
+        >
+
+        <button class="copy-btn" onclick="copyTemplate()">Copy</button>
+      </div>
+    </div>
+
+    <div style="width: 100%; text-align: center">
+      <h2>search here</h2>
+    </div>
+
+    <div class="search-container">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="add your criteria + enter 👌"
+        oninput="filterFlexBoxes()"
+      />
+    </div>
+
+    <div style="width: 100%; text-align: center">
+      <h3>Before inflation hits. Build a peer-to-peer economy.</h3>
+    </div>
+    <br />
+    <br />
+
+    <!--<div style="text-align: center">
+      <a href="/">Table</a>
+      <a> or </a>
+      <a href="card">Card</a>
+      <a>view</a>
+    </div>
+
+    <div class="search-container">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search for Your Criteria + Enter 👌"
+        onkeydown="if (event.keyCode === 13) searchTable()"
+      />
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Forms of Payment</th>
+          <th>Skill Set</th>
+          <th>Portfolio</th>
+          <th>Available to Work?</th>
+          <th>Bio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in entries %}
+        <tr>
+          <td data-label="User ID">
+            <a href="https://twetch.com/u/{{ entry.userId }}" target="_blank"
+              >{{ entry.userId }}</a
+            >
+          </td>
+          <td data-label="Pay" class="linkify">{{ entry.pay|slice:":15" }}</td>
+          <td data-label="Skill" class="linkify">
+            {{ entry.skill|slice:":30" }}
+          </td>
+          <td data-label="Portfolio" class="linkify">
+            {{ entry.portfolio|slice:":50" }}
+          </td>
+          <td data-label="Available" class="linkify">
+            {{ entry.available|slice:":20" }}
+          </td>
+          <td data-label="Bio" class="linkify">{{ entry.bio|slice:":30" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>-->
+    <div class="flex-container">
+      {% for entry in entries %}
+      <div
+        class="flex-item"
+        data-search="{{ entry.userId }} {{ entry.pay }} {{ entry.skill }} {{ entry.portfolio }} {{ entry.available }} {{ entry.bio }}"
+      >
+        <div class="info">
+          <div class="default-image">
+            <img
+              src="https://img.rarecandy.io/resize/width=100,quality=100/https://auth.twetch.app/api/v2/users/{{ entry.userId }}/icon"
+              alt="User icon"
+            />
+          </div>
+          <div class="pay">{{ entry.pay }}</div>
+          <div class="per">Per: {{ entry.per }}</div>
+          <div class="skill">Skill: {{ entry.skill }}</div>
+          <div class="portfolio">🔗 {{ entry.portfolio }}</div>
+          <div class="bio">{{ entry.bio }}</div>
+          <div class="available">Available: {{ entry.available }}</div>
+          <a>Contact: </a
+          ><a href="https://twetch.com/u/{{ entry.userId }}" target="_blank"
+            >{{ entry.userId }}</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+  <script>
+    function copyTemplate() {
+      const template = document.getElementById("template-content");
+      const textarea = document.createElement("textarea");
+      textarea.value = template.textContent;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+  </script>
+  <script>
+    function linkify(element) {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      element.innerHTML = element.textContent.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      });
+    }
+
+    document.querySelectorAll("td.linkify").forEach((cell) => {
+      linkify(cell);
+    });
+  </script>
+  <script>
+    function filterFlexBoxes() {
+      const input = document.getElementById("search-input");
+      const filter = input.value.toUpperCase();
+      const flexContainer = document.querySelector(".flex-container");
+      const flexItems = flexContainer.getElementsByClassName("flex-item");
+
+      for (let i = 0; i < flexItems.length; i++) {
+        const flexItem = flexItems[i];
+        const searchContent = flexItem.getAttribute("data-search");
+        if (searchContent.toUpperCase().indexOf(filter) > -1) {
+          flexItem.style.display = "flex";
+        } else {
+          flexItem.style.display = "none";
+        }
+      }
+    }
+  </script>
+  <script>
+    function searchTable() {
+      const input = document.getElementById("search-input");
+      const filter = input.value.toUpperCase();
+      const table = document.querySelector("table");
+      const trs = table.querySelectorAll("tbody tr");
+
+      trs.forEach((tr) => {
+        const tds = tr.getElementsByTagName("td");
+        let shouldDisplay = false;
+
+        for (let i = 0; i < tds.length; i++) {
+          const td = tds[i];
+          if (td) {
+            const txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              shouldDisplay = true;
+              break;
+            }
+          }
+        }
+        tr.style.display = shouldDisplay ? "" : "none";
+      });
+    }
+  </script>
+  <script>
+    function makeURLsClickable() {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const textNodes = document.evaluate(
+        '//text()[not(ancestor::a) and contains(., "http://") or contains(., "https://")]',
+        document,
+        null,
+        XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+        null
+      );
+
+      for (let i = 0; i < textNodes.snapshotLength; i++) {
+        const textNode = textNodes.snapshotItem(i);
+        const textContent = textNode.textContent;
+        const parent = textNode.parentNode;
+        const matches = Array.from(textContent.matchAll(urlRegex));
+
+        let lastIndex = 0;
+        matches.forEach((match) => {
+          const matchedURL = match[0];
+          const matchedIndex = match.index;
+
+          const beforeText = document.createTextNode(
+            textContent.slice(lastIndex, matchedIndex)
+          );
+          const anchor = document.createElement("a");
+          anchor.href = matchedURL;
+          anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer";
+          anchor.textContent = matchedURL;
+
+          parent.insertBefore(beforeText, textNode);
+          parent.insertBefore(anchor, textNode);
+
+          lastIndex = matchedIndex + matchedURL.length;
+        });
+
+        if (lastIndex < textContent.length) {
+          const afterText = document.createTextNode(
+            textContent.slice(lastIndex)
+          );
+          parent.insertBefore(afterText, textNode);
+        }
+
+        parent.removeChild(textNode);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", makeURLsClickable);
+  </script>
+</html>
