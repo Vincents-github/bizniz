@@ -1,0 +1,162 @@
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script
+      src="https://cdn.usefathom.com/script.js"
+      data-site="ONWOZVWW"
+      defer
+    ></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Show Images</title>
+        <style>
+            body {
+                background-color: black;
+                color: white;
+                margin: 0;
+                padding: 0;
+                height: 100%;
+            }
+            .grid-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-gap: 10px;
+                direction: rtl;
+            }
+            img {
+                width: 100%;
+                height: auto;
+                cursor: pointer;
+            }
+            .container {
+                overflow: hidden;
+                position: relative;
+                height: 100%;
+            }
+            .scroll-up {
+                overflow-y: scroll;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .button-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 0rem;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+            }
+            button {
+                padding: 1rem;
+                background-color: #ffffff;
+                color: #000000;
+                border: none;
+                cursor: pointer;
+                margin: 0 0.5rem;
+            }
+            .blur-background img {
+                filter: blur(7px);
+            }
+            .no-blur {
+                filter: none !important;
+            }
+            .bottom-text {
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                padding: 1rem;
+                background-color: black;
+                color: white;
+            }
+            .bottom-div {
+                background-color: black;
+                width: 100%;
+                height: 33vh;
+            }
+        </style>
+    </head>
+<body>
+    <div class="container">
+        <div class="scroll-up">
+            <div class="bottom-div"></div>
+            <div class="grid-container">
+                {% for image in images %}
+                <div>
+                    <img src="https://dogefiles.twetch.app/{{ image }}" class="img-fluid" alt="Twetch Image" onerror="this.style.display='none'" onclick="expandImage(this)" data-expanded="false">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-text">
+        Bizniz.Builders
+    </div>
+    
+    <div class="button-container">
+        <a href="{% url 'random_images' %}"><button>Random 50</button></a>
+        <a id="previous-images" href="#"><button>Previous 50</button></a>
+        <a href="{% url 'next_images' start_index=next_start_index %}"><button>Next 50</button></a>
+    </div>
+    
+    <script>
+        function expandImage(img) {
+            let container = document.querySelector('.grid-container');
+            if (img.getAttribute('data-expanded') === "false") {
+                img.style.width = "100vw";
+                img.style.height = "100vh";
+                img.style.objectFit = "contain";
+                img.style.position = "fixed";
+                img.style.top = "50%";
+                img.style.left = "50%";
+                img.style.transform = "translate(-50%, -50%)";
+                img.style.zIndex = "999";
+                img.setAttribute('data-expanded', 'true');
+                img.classList.add('no-blur');
+                container.classList.add('blur-background');
+            } else {
+                img.style.width = "100%";
+                img.style.height = "auto";
+                img.style.objectFit = "";
+                img.style.position = "";
+                img.style.top = "";
+                img.style.left = "";
+                img.style.transform = "";
+                img.style.zIndex = "";
+                img.setAttribute('data-expanded', 'false');
+                img.classList.remove('no-blur');
+                container.classList.remove('blur-background');
+            }
+        }
+
+        // Update the 'Previous 50' button's href based on the current URL
+        function updatePreviousImagesLink() {
+            const previousImagesLink = document.getElementById('previous-images');
+            const currentUrl = window.location.href;
+            const startIndexRegex = /twetch\/next\/(\d+)/;
+            const match = currentUrl.match(startIndexRegex);
+
+            if (match) {
+                const startIndex = parseInt(match[1], 10);
+                if (startIndex >= 50) {
+                    const newStartIndex = startIndex - 50;
+                    const newUrl = currentUrl.replace(startIndexRegex, `twetch/next/${newStartIndex}`);
+                    previousImagesLink.href = newUrl;
+                } else {
+                    // Disable the 'Previous 50' button if the start index is less than 50
+                    previousImagesLink.href = '#';
+                    previousImagesLink.querySelector('button').disabled = true;
+                }
+            }
+        }
+
+        updatePreviousImagesLink();
+    </script>
+</body>
+</html>
+{% endblock %}
