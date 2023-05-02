@@ -59,8 +59,9 @@ def read_csv_file(file_path):
         if 'files' in row and row['files']:
             files = json.loads(row['files'].replace("'", '"'))
             for file in files:
-                images.append(file)
+                images.append({'file': file, 'userId': row['userId']})
     return images
+
 
 
 def show_images(request):

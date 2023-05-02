@@ -1,3 +1,4 @@
+{% load static %}
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -7,6 +8,7 @@
       data-site="ONWOZVWW"
       defer
     ></script>
+    
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Show Images</title>
@@ -70,8 +72,8 @@
                 bottom: 0;
                 right: 0;
                 padding: 1rem;
-                background-color: black;
-                color: white;
+                background-color: white;
+                color: black;
             }
             .bottom-div {
                 background-color: black;
@@ -81,28 +83,36 @@
         </style>
     </head>
 <body>
+    <!--Shuffle Mint-->
+    <!--Vanilla-->
+        
     <div class="container">
         <div class="scroll-up">
             <div class="bottom-div"></div>
             <div class="grid-container">
                 {% for image in images %}
                 <div>
-                    <img src="https://dogefiles.twetch.app/{{ image }}" class="img-fluid" alt="Twetch Image" onerror="this.style.display='none'" onclick="expandImage(this)" data-expanded="false">
+                    <img src="https://dogefiles.twetch.app/{{ image.file }}" class="img-fluid" alt="Twetch Image" onerror="this.style.display='none'" onclick="expandImage(this)" data-expanded="false" data-userid="{{ image.userId }}">
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
     
-    <div class="bottom-text">
+    <!--<div class="bottom-text">
         Bizniz.Builders
-    </div>
+    </div>-->
     
-    <div class="button-container">
-        <a href="{% url 'random_images' %}"><button>Random 50</button></a>
-        <a id="previous-images" href="#"><button>Previous 50</button></a>
-        <a href="{% url 'next_images' start_index=next_start_index %}"><button>Next 50</button></a>
-    </div>
+<!--...-->
+<button id="connect-wallet">Connect Wallet</button>
+<div class="button-container">
+    
+    <a href="{% url 'random_images' %}"><button id="random-images" class="payment-button">Shuffle + Mint</button></a>
+    <!--<a id="previous-images" href="#"><button>Previous 50</button></a>-->
+    <a href="{% url 'next_images' start_index=next_start_index %}"><button id="next-images" class="payment-button">Next</button></a>
+</div>
+<!--...-->
+
     
     <script>
         function expandImage(img) {
@@ -157,6 +167,23 @@
 
         updatePreviousImagesLink();
     </script>
+
+    <script>
+        function getProvider() {
+          if ("bitcoin" in window) {
+            const provider = window.bitcoin;
+            if (provider.isTwetch) {
+              return provider;
+            }
+          }
+          window.open("https://twetch.com/downloads", "_blank");
+        }
+      </script>
+
+
+<script src="{% static 'bizniz_app/js/wallet.js' %}" async></script>
+
+
 </body>
 </html>
 {% endblock %}
